@@ -10,7 +10,7 @@ def test_transform():
 
     assert Transform(IM).transform == 'INVERSE'
     assert Transform(IM, 'inverse').transform == 'INVERSE'
-    assert Transform(IM, 'forward').transform == 'FORWARD'
+    assert Transform(IM, 'forward').transform == 'FORWAR'
 
 
 if __name__ == "__main__":
