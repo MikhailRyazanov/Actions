@@ -36,8 +36,14 @@ jobs:
         python -m pip install --upgrade pip setuptools wheel
         python -m pip install pytest pytest-cov
     - name: Install PyAbel
-      run: |
-        python -m pip install . -v
+      run: python -m pip install . -v
+    - name: Information
+      run: >
+        python3 -c "import platform, sys, numpy, scipy;
+        print('Platorm:', platform.platform());
+        print('Python:', sys.version);
+        print('NumPy:', numpy.version.full_version);
+        print('SciPy:', scipy.version.full_version)"
     - name: Run tests
       run: |
         cd ..
