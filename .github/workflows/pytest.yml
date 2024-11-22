@@ -16,16 +16,19 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, macos-13, windows-latest]
-        #os: [ubuntu-latest, windows-latest]
         python-version: ["3.7"]#, "3.13"]
         ext: [cython, no-cython]
-        #exclude:
-        #  - os: macos-latest
-        #    python-version: "3.7" # not available
-        #  - os: macos-13
-        #    python-version: "3.13" # to save resources
-        #  #- os: windows-latest
-        #  #  ext: no-cython
+        exclude:
+          - os: macos-latest
+            python-version: "3.7" # not available
+          - os: macos-13
+            python-version: "3.13" # to save resources
+          - os: macos-latest
+            ext: no-cython
+          - os: macos-13
+            ext: no-cython
+          - os: windows-latest
+            ext: no-cython
 
     steps:
     - uses: actions/checkout@v4
