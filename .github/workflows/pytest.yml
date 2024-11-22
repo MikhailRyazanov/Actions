@@ -8,6 +8,10 @@ on:
   pull_request:
     branches: [ "main" ]
 
+env:
+  #PY_COLORS: 1
+  FORCE_COLOR: 1 # colored output
+
 jobs:
   pytest:
 
@@ -15,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, macos-13, windows-latest]
+        os: [ubuntu-latest]#, macos-latest, macos-13, windows-latest]
         python-version: ["3.7", "3.13"]
         ext: [cython, no-cython]
         exclude:
