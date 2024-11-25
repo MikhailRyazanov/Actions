@@ -28,7 +28,7 @@ if _cython_installed:  # if Cython is installed, we will try to build direct-C
         extra_compile_args = ['/Ox', '/fp:fast']
         libraries = []
     else:
-        extra_compile_args = ['-Ofast']
+        extra_compile_args = ['-Ofast', '-g0']
         libraries = ["m"]
 
     # Optional compilation of Cython modules adapted from
