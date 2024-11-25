@@ -79,7 +79,7 @@ if _cython_installed:  # if Cython is installed, we will try to build direct-C
 
 
 setup(name='Actions',
-      version='0.0.1',
+      version='0.0.2',
       description='For testing GitHub actions',
       author='Mikhail Ryazanov',
       url='https://github.com/MikhailRyazanov/Actionsl',

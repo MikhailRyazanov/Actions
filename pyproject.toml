@@ -1,0 +1,15 @@
+# This file is only for building binary packages by cibuildwheel.
+# Everything else is in setup.py.
+
+[build-system]
+# must be given here, see https://github.com/pypa/cibuildwheel/issues/404
+requires = ["setuptools", "numpy", "scipy", "cython"]
+
+[tool.cibuildwheel]
+build-verbosity = 1
+# don't try to compile NumPy and SciPy from source
+environment = "PIP_ONLY_BINARY=:all:"
+# Linux also tries to build i686 (but there are no binary packages for it)
+archs = "native"
+# "manylinux" should be enough
+skip = "*musllinux*"
