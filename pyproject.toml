@@ -7,8 +7,10 @@ requires = ["setuptools", "numpy", "scipy", "cython"]
 
 [tool.cibuildwheel]
 build-verbosity = 1
+# colored output where possible
+environment.FORCE_COLOR = 1
 # don't try to compile NumPy and SciPy from source
-environment = "PIP_ONLY_BINARY=:all:"
+environment.PIP_ONLY_BINARY = ":all:"
 # Linux also tries to build i686 (but there are no binary packages for it)
 archs = "native"
 # "manylinux" should be enough
