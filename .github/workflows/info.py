@@ -1,3 +1,6 @@
+"""
+Print summary information about current OS, Python, and required packages.
+"""
 import platform, sys, os
 
 print('Platorm:', platform.platform())
