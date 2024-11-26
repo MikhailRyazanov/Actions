@@ -22,17 +22,17 @@ jobs:
         python-version: ["3.7", "3.13"]
         ext: [cython, no-cython] # with/without Cython extension
         exclude:
-          - os: macos-latest
-            python-version: "3.7" # not available
-          - os: macos-13
-            python-version: "3.13" # to save resources
-          # skip no-cython on slower systems
-          - os: macos-13
-            ext: no-cython
-          - os: macos-latest
-            ext: no-cython
-          - os: windows-latest
-            ext: no-cython
+        - os: macos-latest
+          python-version: "3.7" # not available
+        - os: macos-13
+          python-version: "3.13" # to save resources
+        # skip no-cython on slower systems
+        - os: macos-13
+          ext: no-cython
+        - os: macos-latest
+          ext: no-cython
+        - os: windows-latest
+          ext: no-cython
 
     steps:
     - name: Set up Python ${{ matrix.python-version }}
@@ -52,14 +52,7 @@ jobs:
     - name: Install PyAbel
       run: python -m pip install . -v
     - name: Information
-      # (ugly but portable and with clean output)
-      run: >
-        python3 -c "import platform, sys, os, numpy, scipy;
-        print('Platorm:', platform.platform());
-        print('Python:', sys.version);
-        print('NumPy:', numpy.version.full_version);
-        print('SciPy:', scipy.version.full_version, flush=True);
-        os.system('cython -V 2>cython.err') and print('Cython not found')"
+      run: python python .github/workflows/info.py
     - name: Run tests
       # "cd .." for coverage of installed abel instead of ./abel subdir
       run: |
