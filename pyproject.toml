@@ -15,3 +15,6 @@ environment.PIP_ONLY_BINARY = ":all:"
 archs = "native"
 # "manylinux" should be enough
 skip = "*musllinux*"
+test-requires = "pytest"
+# calling pytest directly uses wrong python
+test-command = "python -m pytest --pyargs abel"

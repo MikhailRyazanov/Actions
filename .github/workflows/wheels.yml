@@ -20,8 +20,8 @@ jobs:
       - name: Build wheels
         env:
           CIBW_PROJECT_REQUIRES_PYTHON: ">=3.12" # limit to full-support
-          CIBW_TEST_REQUIRES: pytest
-          CIBW_TEST_COMMAND: "python -m pytest --pyargs abel"
+          #CIBW_TEST_REQUIRES: pytest
+          #CIBW_TEST_COMMAND: "python -m pytest --pyargs abel"
         run: python -m cibuildwheel --output-dir wheels
       - uses: actions/upload-artifact@v4
         with:
