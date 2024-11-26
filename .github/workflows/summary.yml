@@ -1,0 +1,21 @@
+name: Build summary
+
+on: workflow_dispatch
+
+jobs:
+  sdist-tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        sparse-checkout: .github/workflows/summary.py
+        sparse-checkout-cone-mode: false
+    - uses: actions/download-artifact@v4
+      with:
+        name: sdist
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+    - name: Summary
+      run: python .github/workflows/summary.py
