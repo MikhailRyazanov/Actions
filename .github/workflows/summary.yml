@@ -22,9 +22,11 @@ jobs:
     #      -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
     #      -L "https://api.github.com/repos/MikhailRyazanov/Actions/actions/artifacts/2236953416/zip"
     - uses: actions/checkout@v4
+    - run: gh run list -s success
     - run: gh run download -n sdist
+    - run: gh run download -p 'wheels-*'
     - run: ls -Al
-    - run: sha256sum *
+    - run: sha256sum * || true
     #- name: Set up Python
     #  uses: actions/setup-python@v5
     #  with:
