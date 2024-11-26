@@ -3,19 +3,22 @@ name: Build summary
 on: workflow_dispatch
 
 jobs:
-  sdist-tests:
+  summary:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-      with:
-        sparse-checkout: .github/workflows/summary.py
-        sparse-checkout-cone-mode: false
-    - uses: actions/download-artifact@v4
-      with:
-        name: sdist
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.12"
-    - name: Summary
-      run: python .github/workflows/summary.py
+    #- uses: actions/checkout@v4
+    #  with:
+    #    sparse-checkout: .github/workflows/summary.py
+    #    sparse-checkout-cone-mode: false
+    
+    #- uses: actions/download-artifact@v4
+    #  with:
+    #    name: sdist
+    - run: curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -o out -L "https://api.github.com/repos/MikhailRyazanov/Actions/actions/artifacts/2236953416/zip"
+    - run: ls -Al
+    #- name: Set up Python
+    #  uses: actions/setup-python@v5
+    #  with:
+    #    python-version: "3.12"
+    #- name: Summary
+    #  run: python .github/workflows/summary.py
