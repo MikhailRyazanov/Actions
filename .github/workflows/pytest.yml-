@@ -35,7 +35,6 @@ jobs:
             ext: no-cython
 
     steps:
-    - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
       with:
