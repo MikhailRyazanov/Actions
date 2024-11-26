@@ -21,6 +21,7 @@ jobs:
     #    curl -o out \
     #      -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
     #      -L "https://api.github.com/repos/MikhailRyazanov/Actions/actions/artifacts/2236953416/zip"
+    - uses: actions/checkout@v4
     - run: gh run download -n sdist
     - run: ls -Al
     - run: sha256sum *
