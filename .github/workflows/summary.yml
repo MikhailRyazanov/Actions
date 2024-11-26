@@ -14,10 +14,11 @@ jobs:
     #- uses: actions/download-artifact@v4
     #  with:
     #    name: sdist
-    - run: |
-        curl -o out \
-          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-          -L "https://api.github.com/repos/MikhailRyazanov/Actions/actions/artifacts/2236953416/zip"
+    #- run: |
+    #    curl -o out \
+    #      -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+    #      -L "https://api.github.com/repos/MikhailRyazanov/Actions/actions/artifacts/2236953416/zip"
+    - run: gh run download -n sdist
     - run: ls -Al
     - run: sha256sum *
     #- name: Set up Python
