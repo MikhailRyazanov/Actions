@@ -9,10 +9,10 @@ jobs:
   summary:
     runs-on: ubuntu-latest
     steps:
-    #- uses: actions/checkout@v4
-    #  with:
-    #    sparse-checkout: .github/workflows/summary.py
-    #    sparse-checkout-cone-mode: false
+    - uses: actions/checkout@v4
+      with:
+        sparse-checkout: .github/workflows/summary.py
+        sparse-checkout-cone-mode: false
     
     #- uses: actions/download-artifact@v4
     #  with:
@@ -21,9 +21,10 @@ jobs:
     #    curl -o out \
     #      -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
     #      -L "https://api.github.com/repos/MikhailRyazanov/Actions/actions/artifacts/2236953416/zip"
-    - uses: actions/checkout@v4
+    #- uses: actions/checkout@v4
     - run: gh run list -s success
     - run: gh run download -n sdist
+    - run: gh run download -p sdist
     - run: gh run download -p 'wheels-*'
     - run: ls -Al
     - run: sha256sum * || true
