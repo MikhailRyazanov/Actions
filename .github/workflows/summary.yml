@@ -2,6 +2,9 @@ name: Build summary
 
 on: workflow_dispatch
 
+env:
+  GH_TOKEN: ${{ github.token }}
+
 jobs:
   summary:
     runs-on: ubuntu-latest
