@@ -1,9 +1,9 @@
-name: Build summary
+name: Builds summary
 
 on: workflow_dispatch
 
 env:
-  GH_TOKEN: ${{ github.token }}
+  GH_TOKEN: ${{ github.token }} # for "gh run download"
 
 jobs:
   summary:
@@ -13,27 +13,12 @@ jobs:
       with:
         sparse-checkout: .github/workflows/summary.py
         sparse-checkout-cone-mode: false
-    
-    #- uses: actions/download-artifact@v4
-    #  with:
-    #    name: sdist
-    #- run: |
-    #    curl -o out \
-    #      -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-    #      -L "https://api.github.com/repos/MikhailRyazanov/Actions/actions/artifacts/2236953416/zip"
-    #- uses: actions/checkout@v4
-    #- run: gh run list -s success
-    #- run: gh run download -n sdist
-    #- run: gh run download -p sdist
-    - run: gh run download -n sdist -p 'wheels-*'
-    #- run: ls -Al
+    - run: gh run download -p 'sdist*' -p 'wheels-*'
     - run: ls -AlR
-    #- run: unzip sdist; unzip 'wheels-*'
-    #- run: ls -Al
-    #- run: sha256sum * || true
-    #- name: Set up Python
-    #  uses: actions/setup-python@v5
-    #  with:
-    #    python-version: "3.12"
-    #- name: Summary
-    #  run: python .github/workflows/summary.py
+    - run: cp -t . sdist-*/*.xml wheels-*/*.xml
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+    - name: Summary
+      run: python .github/workflows/summary.py
