@@ -15,7 +15,7 @@ print('==============================')
 
 good, bad = 0, 0
 
-for xml in glob('*.xml'):
+for xml in sorted(glob('*.xml')):
     with open(xml, 'rt') as f:
         res = dict(findall(r'(\S+)="(\S+)"', f.readline()))
     T, E, F, S = map(lambda k: int(res[k]),
