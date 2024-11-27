@@ -18,4 +18,6 @@ jobs:
       with:
         python-version: "3.12"
     - name: SUMMARY
-      run: python .github/workflows/summary.py
+      run: |
+        python .github/workflows/summary.py
+        python .github/workflows/summary.py md >> $GITHUB_STEP_SUMMARY
