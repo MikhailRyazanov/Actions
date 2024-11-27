@@ -9,14 +9,16 @@ It must be called after running pytest, in the same directory, with the
 import os
 import platform
 import sys
+import shutil
 
 package = sys.argv[1]  # full path to package directory
 wheel = os.path.basename(sys.argv[2])  # wheel file name
 
 if platform.system() == 'Linux':
-    out = f'/output/{wheel}.xml'
+    out = f'/output/{wheel}.xml'  # in container
 else:
     out = f'{package}/wheels/{wheel}.xml'  # assuming "--output-dir wheels"
 
 print('Saving results to', out)
-os.renames('pytest.xml', out)  # (creating dest dir if it doesn't exist yet)
+os.makedirs(os.path.dirname(out), exist_ok=True)  # (might not exist yet)
+shutil.move('pytest.xml', out)
