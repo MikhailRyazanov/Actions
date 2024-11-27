@@ -24,6 +24,6 @@ test-requires = "pytest"
 # calling pytest directly uses wrong python;
 # results can be copied to output (with meaningful name) only manually
 test-command = """
-  python -m pytest --pyargs abel --junit-xml=pytest.xml; \
+  python -m pytest --pyargs abel --junit-xml=pytest.xml && \
   python {package}/.github/workflows/save-test.py {package} {wheel}
 """
