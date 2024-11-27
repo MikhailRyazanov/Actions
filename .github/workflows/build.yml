@@ -11,18 +11,6 @@ jobs:
 
   results:
     #needs: [sdist, wheels]
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-      with:
-        sparse-checkout: .github/workflows/summary.yml
-        sparse-checkout-cone-mode: false
-    - uses: ./.github/workflows/summary.yml
-    - name: Pack
-      run: |
-        mkdir pkg
-        cp -t pkg sdist/* wheels-*/*.whl
-    - uses: actions/upload-artifact@v4
-      with:
-        name: package
-        path: pkg/*
+    uses: ./.github/workflows/summary.yml
+    with:
+      pack: true
