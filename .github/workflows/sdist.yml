@@ -62,7 +62,7 @@ jobs:
     - name: TESTS
       run: |
         python -m pytest -v --pyargs abel \
-          --junit-xml=sdist-${{ matrix.py-ver }}-${{ matrix.ext }}.xml
+          --junit-xml=sdist-install-${{ matrix.py-ver }}-${{ matrix.ext }}.xml
     - uses: actions/upload-artifact@v4
       with:
         name: sdist-test-${{ matrix.py-ver }}-${{ matrix.ext }}
