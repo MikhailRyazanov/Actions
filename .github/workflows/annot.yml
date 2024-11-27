@@ -1,0 +1,15 @@
+name: Action summary
+
+on: workflow_dispatch
+
+jobs:
+  something:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Adding markdown
+      run: |
+        echo '### Hello world!' >> $GITHUB_STEP_SUMMARY
+        echo '<span style="color:green">good</span>' >> $GITHUB_STEP_SUMMARY
+        echo '<span style="color:red">bad</span>' >> $GITHUB_STEP_SUMMARY
+        echo '**bold**' >> $GITHUB_STEP_SUMMARY
+        echo '*italic*' >> $GITHUB_STEP_SUMMARY
