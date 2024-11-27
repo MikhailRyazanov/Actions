@@ -1,6 +1,6 @@
 name: Build sdist
 
-on: workflow_dispatch
+on: [workflow_dispatch, workflow_call]
 
 env:
   FORCE_COLOR: 1 # colored output where possible
