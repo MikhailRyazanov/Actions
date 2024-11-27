@@ -44,7 +44,7 @@ for xml in sorted(glob('*.xml')):
     T, E, F, S = map(lambda k: int(res[k]),
                      ['tests', 'errors', 'failures', 'skipped'])
     P = T - E - F - S
-    if xml[:5] == 'sdist':
+    if 'no-cython' in xml:
         T -= S  # ignore skipped Cython
         s = 'warn'
     else:
