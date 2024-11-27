@@ -2,9 +2,6 @@ name: Builds summary
 
 on: workflow_dispatch
 
-env:
-  GH_TOKEN: ${{ github.token }} # for "gh run download"
-
 jobs:
   summary:
     runs-on: ubuntu-latest
@@ -14,11 +11,11 @@ jobs:
         sparse-checkout: .github/workflows/summary.py
         sparse-checkout-cone-mode: false
     - run: gh run download -p 'sdist*' -p 'wheels-*'
-    - run: ls -AlR
+      env:
+        GH_TOKEN: ${{ github.token }}
     - run: cp -t . sdist-*/*.xml wheels-*/*.xml
-    - name: Set up Python
-      uses: actions/setup-python@v5
+    - uses: actions/setup-python@v5
       with:
         python-version: "3.12"
-    - name: Summary
+    - name: SUMMARY
       run: python .github/workflows/summary.py
