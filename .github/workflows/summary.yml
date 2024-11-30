@@ -18,10 +18,10 @@ jobs:
       with:
         sparse-checkout: .github/workflows/summary.py
         sparse-checkout-cone-mode: false
-    - run: gh run download -p 'sdist*' -p 'wheels-*'
+    - run: gh run download -p 'sdist-${{ github.ref_name }}*' -p 'wheels-${{ github.ref_name }}-*'
       env:
         GH_TOKEN: ${{ github.token }}
-    - run: cp -t . sdist-*/*.xml wheels-*/*.xml
+    - run: cp -v -t . sdist-*/*.xml wheels-*/*.xml
     - uses: actions/setup-python@v5
       with:
         python-version: "3.12"
@@ -33,9 +33,9 @@ jobs:
       if: inputs.pack
       run: |
         mkdir pkg
-        cp -t pkg sdist/* wheels-*/*.whl
+        cp -v -t pkg sdist-*/*.tar.gz wheels-*/*.whl
     - uses: actions/upload-artifact@v4
       if: inputs.pack
       with:
-        name: package
+        name: package-${{ github.ref_name }}
         path: pkg/*

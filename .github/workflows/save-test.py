@@ -1,6 +1,6 @@
 """
 cibuildwheel doesn't provide any reasonable variables for naming pytest results
-file, neither any tools to supply these files with the built wheels, so all
+files, neither any tools to supply these files with the built wheels, so all
 this work is done by this script.
 
 It must be called after running pytest, in the same directory, with the
@@ -20,5 +20,5 @@ else:
     out = f'{package}/wheels/{wheel}.xml'  # assuming "--output-dir wheels"
 
 print('Saving results to', out)
-os.makedirs(os.path.dirname(out), exist_ok=True)  # (might not exist yet)
+os.makedirs(os.path.dirname(out), exist_ok=True)  # might not exist yet
 shutil.move('pytest.xml', out)
