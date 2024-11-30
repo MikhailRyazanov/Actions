@@ -29,9 +29,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        py-ver: ["3.7"]#, "3.13"]
-        #ext: [cython, no-cython] # with/without Cython extension
-        ext: [no-cython]
+        py-ver: ["3.7", "3.13"]
+        ext: [cython, no-cython] # with/without Cython extension
 
     steps:
     - uses: actions/checkout@v4
