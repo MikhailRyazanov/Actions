@@ -10,7 +10,7 @@ print('\nTest legendre:')
 np.set_printoptions(formatter={'float': lambda x: f'{x:.18g}'})
 print(legendre(2).c)
 
-print('\nTest optimize:')
+print('\nTest optimize:', flush=True)
 r'''
 GitHub:
 
@@ -84,7 +84,7 @@ cos2 = np.cos(theta)**2
 sin2 = np.sin(theta)**2
 
 def check(name, ref, theta, intensity):
-    print(name)
+    print(name, flush=True)
     beta, amplitude = anisotropy_parameter(theta, intensity)
     assert_allclose((beta[0], amplitude[0]), ref, atol=1e-8,
                     err_msg='-> ' + name)
