@@ -1,0 +1,21 @@
+name: Run weird PyAbel tests
+
+on: [workflow_dispatch, push]
+
+jobs:
+  wheels:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        #os: [ubuntu-latest, macos-13, macos-latest, windows-latest]
+        os: [macos-latest]
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.13"
+    - name: Install libraries
+      run: pip install numpy scipy
+    - run: python .github/workflows/weird.py
