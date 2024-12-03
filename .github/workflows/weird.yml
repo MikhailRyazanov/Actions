@@ -18,4 +18,4 @@ jobs:
         python-version: "3.13"
     - name: Install libraries
       run: pip install numpy scipy
-    - run: python -u .github/workflows/weird.py
+    - run: python -u .github/workflows/weird.py 2>&1

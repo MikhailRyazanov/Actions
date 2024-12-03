@@ -1,3 +1,6 @@
+from warnings import simplefilter
+simplefilter('always')
+
 import numpy as np
 from numpy.testing import assert_allclose
 import scipy
@@ -10,7 +13,7 @@ print('\nTest legendre:')
 np.set_printoptions(formatter={'float': lambda x: f'{x:.18g}'})
 print(legendre(2).c)
 
-print('\nTest optimize:', flush=True)
+print('\nTest optimize:')
 r'''
 GitHub:
 
@@ -84,7 +87,7 @@ cos2 = np.cos(theta)**2
 sin2 = np.sin(theta)**2
 
 def check(name, ref, theta, intensity):
-    print(name, flush=True)
+    print(name)
     beta, amplitude = anisotropy_parameter(theta, intensity)
     assert_allclose((beta[0], amplitude[0]), ref, atol=1e-8,
                     err_msg='-> ' + name)
