@@ -1,7 +1,12 @@
 import numpy as np
+import scipy
 from scipy.special import legendre
 
-print('Test legendre:')
+print(f'NumPy {np.version.full_version}, SciPy {scipy.version.full_version}')
+
+print('\nTest legendre:')
+
+np.set_printoptions(formatter={'float': lambda x: f'{x:.18g}'})
 
 def ang_legendre(c):
     print(f'{c=}')
@@ -9,8 +14,7 @@ def ang_legendre(c):
     for n, a in enumerate(c):
         print(f'{n=}: {a} *', legendre(n).c[::2])
         C[n::-2] += a * legendre(n).c[::2]
-        # (SciPy's legendre() has backwards order and produces noise in
-        #  coefficients that must be zero, so indexing takes care of this)
+        print(f'  l({n}).c = {legendre(n).c}')
     print(f'{C=}')
     return C
 
