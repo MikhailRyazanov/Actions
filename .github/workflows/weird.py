@@ -14,6 +14,7 @@ np.set_printoptions(formatter={'float': lambda x: f'{x:.18g}'})
 print(legendre(2).c)
 
 print('\nTest optimize:')
+np.set_printoptions(formatter=None)
 r'''
 GitHub:
 
@@ -48,34 +49,21 @@ tests/test_tools_center.py::test_find_origin
   c:\miniconda\envs\abel-env\lib\site-packages\scipy\optimize\minpack.py:787: OptimizeWarning: Covariance of the parameters could not be estimated
     category=OptimizeWarning)
 '''
-def anisotropy_parameter(theta, intensity, theta_ranges=None):
+def anisotropy_parameter(theta, intensity):
     def P2(x):  # 2nd-order Legendre polynomial
         return (3 * x * x - 1) / 2
 
     def PAD(theta, beta, amplitude):
         return amplitude * (1 + beta * P2(np.cos(theta)))  # Eq. (1) as above
 
-    # angular range of data to be included in the fit
-    if theta_ranges is not None:
-        subtheta = np.ones(len(theta), dtype=bool)
-        for rt in theta_ranges:
-            subtheta = np.logical_and(
-                subtheta, np.logical_and(theta >= rt[0], theta <= rt[1]))
-        theta = theta[subtheta]
-        intensity = intensity[subtheta]
-
     # fit angular intensity distribution
-    try:
-        popt, pcov = curve_fit(PAD, theta, intensity)
-        beta, amplitude = popt
-        error_beta, error_amplitude = np.sqrt(np.diag(pcov))
-        # physical range
-        if beta > 2 or beta < -1:
-            beta, error_beta = np.nan, np.nan
-    except:
-        beta, error_beta = np.nan, np.nan
-        amplitude, error_amplitude = np.nan, np.nan
-
+    popt, pcov = curve_fit(PAD, theta, intensity)
+    print(popt)
+    print(pcov)
+    beta, amplitude = popt
+    error_beta, error_amplitude = np.sqrt(np.diag(pcov))
+    print(f'{beta = } +- {error_beta}')
+    print(f'{amplitude = } +- {error_amplitude}')
     return (beta, error_beta), (amplitude, error_amplitude)
 
 
@@ -87,7 +75,7 @@ cos2 = np.cos(theta)**2
 sin2 = np.sin(theta)**2
 
 def check(name, ref, theta, intensity):
-    print(name)
+    print('\n' + name)
     beta, amplitude = anisotropy_parameter(theta, intensity)
     assert_allclose((beta[0], amplitude[0]), ref, atol=1e-8,
                     err_msg='-> ' + name)
