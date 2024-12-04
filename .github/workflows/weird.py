@@ -67,7 +67,8 @@ def guess_gaussian(x):
 
 
 def fit_gaussian(x):
-    res = curve_fit(gaussian, np.arange(x.size), x, p0=guess_gaussian(x))
+    res = curve_fit(gaussian, np.arange(x.size), x, p0=guess_gaussian(x),
+                    method='trf')
     print(res[0])
     print(res[1])
     return res[0]  # extract optimal values
