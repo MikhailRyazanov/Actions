@@ -4,12 +4,17 @@ on: [workflow_dispatch, push]
 
 jobs:
   wheels:
-    runs-on: ubuntu-22.04
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-22.04, macos-latest]
+
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.13"
-    - run: echo '::notice::Test notice from echo'
-    - run: python .github/workflows/annot.py
+    #- uses: actions/checkout@v4
+    #- name: Set up Python
+    #  uses: actions/setup-python@v5
+    #  with:
+    #    python-version: "3.13"
+    - run: echo '::notice title=${{ matrix.os }}::Test notice'
+    - run: echo '::warning title=${{ matrix.os }}::Test warning'
+    #- run: python .github/workflows/annot.py
