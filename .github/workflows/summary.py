@@ -1,19 +1,25 @@
 """
 Print summary of all pytest results (saved using "--junit-xml=<wheel>.xml").
-Without arguments -- ANSI-colored terminal, with any argument -- markdown.
+Without arguments -- ANSI-colored terminal,
+with "md" argument -- markdown,
+with "msg" argument -- gitHub notice/warning message (only for skip/warn).
 """
 import sys
 from glob import glob
 from re import findall
 
-# markdown or terminal
-md = len(sys.argv) > 1  # (any argument)
+# output type
+if len(sys.argv) > 1:
+    out = sys.argv[1]
+else:
+    out = 'term'
 
 
+# formatter for ANSI/markdown
 def fmt(val, cond, style):  # style: "ok"/"warn"/"err"
     if not cond:
         return val
-    if md:
+    if out == 'md':
         val = val.strip()
         if style in ['ok', 'err']:
             return '**' + val + '**'  # bold
@@ -27,15 +33,17 @@ def fmt(val, cond, style):  # style: "ok"/"warn"/"err"
         return f'\x1B[33m{val}\x1B[0m'  # yellow
 
 
-if md:
+# table header
+if out == 'md':
     print('| Wheel | Pass | Error | Fail | Skip |')
     print('| --- | --- | --- | --- | --- |')
     sep = ' | '
-else:
+elif out == 'term':
     print('Wheel  Pass  Error  Fail  Skip')
     print('==============================')
     sep = '  '
 
+# count runs
 good, bad = 0, 0
 
 for xml in sorted(glob('*.xml')):
@@ -46,26 +54,32 @@ for xml in sorted(glob('*.xml')):
     P = T - E - F - S
     if 'no-cython' in xml:
         T -= S  # ignore skipped Cython
-        s = 'warn'
-    else:
-        s = 'err'
-    row = sep.lstrip()
-    row += xml[:-4]
-    if not md:
-        row += '\n' + ' ' * 5
-    row += sep + fmt(f'{P:4}', P == T, 'ok')
-    row += sep + fmt(f'{E:5}', E, 'err')
-    row += sep + fmt(f'{F:4}', F, 'err')
-    row += sep + fmt(f'{S:4}', S, s)
-    row += sep.rstrip()
-    print(row)
-    if P == T:
-        good += 1
-    else:
-        bad += 1
+    ok = P == T
 
-print('' if md else '==============================')
-tot = fmt(f'{good} good', not bad, 'ok')
-if bad:
-    tot += ', ' + fmt(f'{bad} bad', True, 'err')
-print(tot)
+    if out == 'msg':
+        msg = 'notice' if ok else 'warning'
+        if S:
+            print(f'::{msg} title={xml[:-4]}::{S} skipped')
+    else:
+        row = sep.lstrip()
+        row += xml[:-4]
+        if out != 'md':
+            row += '\n' + ' ' * 5
+        row += sep + fmt(f'{P:4}', P == T, 'ok')
+        row += sep + fmt(f'{E:5}', E, 'err')
+        row += sep + fmt(f'{F:4}', F, 'err')
+        row += sep + fmt(f'{S:4}', S, 'warn' if ok else 'err')
+        row += sep.rstrip()
+        print(row)
+        if ok:
+            good += 1
+        else:
+            bad += 1
+
+# table footer and run counts
+if out != 'msg':
+    print('' if out == 'md' else '==============================')
+    tot = fmt(f'{good} good', not bad, 'ok')
+    if bad:
+        tot += ', ' + fmt(f'{bad} bad', True, 'err')
+    print(tot)

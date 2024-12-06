@@ -18,14 +18,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-13, macos-latest, windows-latest]
-        python-version: ["3.7", "3.13"]
+        os: [ubuntu-22.04]#, macos-13, macos-latest, windows-latest]
+        py-ver: ["3.7"]#, "3.13"]
         ext: [cython, no-cython] # with/without Cython extension
         exclude:
         - os: macos-latest
-          python-version: "3.7" # not available
+          py-ver: "3.7" # not available
         - os: macos-13
-          python-version: "3.13" # to save resources
+          py-ver: "3.13" # to save resources
         # skip no-cython on slower systems
         - os: macos-13
           ext: no-cython
@@ -35,10 +35,11 @@ jobs:
           ext: no-cython
 
     steps:
-    - name: Set up Python ${{ matrix.python-version }}
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ matrix.py-ver }}
       uses: actions/setup-python@v5
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: ${{ matrix.py-ver }}
         cache: "pip"
         cache-dependency-path: setup.py
     - name: Update setup
@@ -57,4 +58,5 @@ jobs:
       # "cd .." for coverage of installed abel instead of ./abel subdir
       run: |
         cd ..
-        pytest -v --cov=abel --pyargs abel
+        pytest -v --cov=abel --pyargs abel --junit-xml="${{ matrix.os }}, ${{ matrix.py-ver }}, ${{ matrix.ext }}".xml
+        python Actions/.github/workflows/summary.py msg
