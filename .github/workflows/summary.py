@@ -59,11 +59,7 @@ for xml in sorted(glob('*.xml')):
     if out == 'msg':
         msg = 'notice' if ok else 'warning'
         if S:
-            #print(f'::{msg} title="{xml[:-4]}"::{S} skipped')
             print(f'::{msg}::{S} skipped')
-        else:
-            #print(f'::notice title="{xml[:-4]}"::All pass')
-            print(f'::notice::All pass')
     else:
         row = sep.lstrip()
         row += xml[:-4]

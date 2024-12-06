@@ -58,6 +58,5 @@ jobs:
       # "cd .." for coverage of installed abel instead of ./abel subdir
       run: |
         cd ..
-        python -m pytest -v --cov=abel --pyargs abel --junit-xml="${{ matrix.os }}, ${{ matrix.py-ver }}, ${{ matrix.ext }}.xml"
-        ls
+        python -m pytest -v --cov=abel --pyargs abel --junit-xml=pytest.xml
         python Actions/.github/workflows/summary.py msg
