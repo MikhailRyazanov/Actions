@@ -56,7 +56,8 @@ jobs:
       run: python .github/workflows/info.py
     - name: TESTS
       # "cd .." for coverage of installed abel instead of ./abel subdir
+      # summary needs "no-cython" in .xml to classify skipped as OK or warning
       run: |
         cd ..
-        python -m pytest -v --cov=abel --pyargs abel --junit-xml=pytest.xml
+        pytest -v --cov=abel --pyargs abel --junit-xml=${{ matrix.ext }}.xml
         python Actions/.github/workflows/summary.py msg
