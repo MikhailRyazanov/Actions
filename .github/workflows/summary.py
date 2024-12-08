@@ -1,11 +1,12 @@
 """
-Print summary of all pytest results (saved using "--junit-xml=<wheel>.xml").
+Print summary of all pytest results (saved to JSON files).
 Without arguments -- ANSI-colored terminal,
 with "md" argument -- markdown,
 with "msg" argument -- gitHub notice/warning message (only for skip/warn).
 """
 import sys
 from glob import glob
+import json
 from re import findall
 
 # output type
@@ -35,39 +36,41 @@ def fmt(val, cond, style):  # style: "ok"/"warn"/"err"
 
 # table header
 if out == 'md':
-    print('| Wheel | Pass | Error | Fail | Skip |')
-    print('| --- | --- | --- | --- | --- |')
+    print('| Testing | Pass | Error | Fail | Warn | Skip |')
+    print('| --- | --- | --- | --- | --- | --- |')
     sep = ' | '
 elif out == 'term':
-    print('Wheel  Pass  Error  Fail  Skip')
-    print('==============================')
+    print('Testing  Pass  Error  Fail  Warn  Skip')
+    print('======================================')
     sep = '  '
 
 # count runs
 good, bad = 0, 0
 
-for xml in sorted(glob('*.xml')):
-    with open(xml, 'rt') as f:
-        res = dict(findall(r'(\S+)="(\S+)"', f.readline()))
-    T, E, F, S = map(lambda k: int(res[k]),
-                     ['tests', 'errors', 'failures', 'skipped'])
+for fname in sorted(glob('*.json')):
+    with open(fname, 'rt') as f:
+        res = json.load(f)
+    T, E, F, W, S = map(lambda k: int(res[k]),
+                        ['tests', 'error', 'failed', 'warnings', 'skipped'])
     P = T - E - F - S
-    if 'no-cython' in xml:
+    if 'no-cython' in fname:
         T -= S  # ignore skipped Cython
     ok = P == T
 
     if out == 'msg':
-        msg = 'notice' if ok else 'warning'
+        if W:
+            print(f'::warning::{W} warning{"s" if W > 1 else ""}')
         if S:
-            print(f'::{msg}::{S} skipped')
+            print(f'::{"notice" if ok else "warning"}::{S} skipped')
     else:
         row = sep.lstrip()
-        row += xml[:-4]
+        row += fname[:-5]
         if out != 'md':
-            row += '\n' + ' ' * 5
+            row += '\n' + ' ' * 7
         row += sep + fmt(f'{P:4}', P == T, 'ok')
         row += sep + fmt(f'{E:5}', E, 'err')
         row += sep + fmt(f'{F:4}', F, 'err')
+        row += sep + fmt(f'{W:4}', W, 'warn')
         row += sep + fmt(f'{S:4}', S, 'warn' if ok else 'err')
         row += sep.rstrip()
         print(row)
@@ -78,7 +81,7 @@ for xml in sorted(glob('*.xml')):
 
 # table footer and run counts
 if out != 'msg':
-    print('' if out == 'md' else '==============================')
+    print('' if out == 'md' else '======================================')
     tot = fmt(f'{good} good', not bad, 'ok')
     if bad:
         tot += ', ' + fmt(f'{bad} bad', True, 'err')

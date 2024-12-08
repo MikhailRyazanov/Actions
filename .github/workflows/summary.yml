@@ -12,7 +12,7 @@ on:
 
 jobs:
   summary:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v4
       with:
@@ -21,7 +21,7 @@ jobs:
     - run: gh run download -p 'sdist-${{ github.ref_name }}*' -p 'wheels-${{ github.ref_name }}-*'
       env:
         GH_TOKEN: ${{ github.token }}
-    - run: cp -v -t . sdist-*/*.xml wheels-*/*.xml || true
+    - run: cp -v -t . sdist-*/*.json wheels-*/*.json || true
     - uses: actions/setup-python@v5
       with:
         python-version: "3.12"
