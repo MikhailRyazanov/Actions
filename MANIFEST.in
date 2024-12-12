@@ -1,5 +1,5 @@
 include README.md
 include LICENSE
-exclude pyproject.toml
 recursive-include abel *.py *.pyx
 recursive-include examples *.py
+include abel/tests/data/*

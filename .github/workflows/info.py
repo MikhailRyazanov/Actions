@@ -20,5 +20,8 @@ try:
 except ImportError:
     print('SciPy not found')
 
-sys.stdout.flush()
-os.system('cython -V 2>cython.err') and print('Cython not found')
+try:
+    import Cython
+    print('Cython:', Cython.__version__)
+except ImportError:
+    print('Cython not found')
