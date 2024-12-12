@@ -51,8 +51,11 @@ jobs:
       run: python -m pip install --upgrade pip setuptools wheel
     - name: Install Cython
       if: matrix.ext != 'no-cython'
-      # numpy and scipy must be preinstalled for building Cython extension
-      run: python -m pip install numpy scipy cython
+      # for building Cython extension, NumPy and Cython must be preinstalled,
+      # and "build isolation" disabled
+      run: |
+        python -m pip install numpy cython
+        echo "PIP_NO_BUILD_ISOLATION=0" >> "$GITHUB_ENV"
     - name: Information
       run: python .github/workflows/info.py
     - name: Install PyAbel from source distribution
