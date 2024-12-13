@@ -25,8 +25,11 @@ jobs:
         CIBW_PROJECT_REQUIRES_PYTHON: ">=3.12"
         # don't try to compile NumPy and SciPy from source
         PIP_ONLY_BINARY: ":all:"
-        # preinstall packages required to build Cython extension
+        # preinstall packages required to build with Cython extension
         CIBW_BEFORE_BUILD: "python -m pip install setuptools numpy cython"
+        # disable PEP 517 build isolation, instead use already installed packages
+        # (weirdly, must be set to "0", see https://github.com/pypa/pip/issues/5735)
+        PIP_NO_BUILD_ISOLATION: 0
         # Linux also tries to build i686 (but NumPy has no binary packages)
         CIBW_ARCHS: "native"
         # "manylinux" should be enough
