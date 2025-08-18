@@ -18,7 +18,9 @@ jobs:
       with:
         sparse-checkout: .github/workflows/summary.py
         sparse-checkout-cone-mode: false
-    - run: gh run download -p 'sdist-${{ github.ref_name }}*' -p 'wheels-${{ github.ref_name }}-*'
+    - run: |
+        gh run download -p 'sdist-${{ github.ref_name }}*' \
+                        -p 'wheels-${{ github.ref_name }}-*'
       env:
         GH_TOKEN: ${{ github.token }}
     - run: cp -v -t . sdist-*/*.json wheels-*/*.json || true

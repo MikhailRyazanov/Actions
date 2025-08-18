@@ -20,7 +20,7 @@ jobs:
     - name: Build wheels
       env:
         CIBW_BUILD_VERBOSITY: 1
-        # Linux also tries to build i686 (but NumPy has no binary packages)
+        # Linux also tries to build i686 (for which NumPy has no binary packages)
         CIBW_ARCHS: "native"
         # "manylinux" should be enough
         CIBW_SKIP: "*musllinux*"
@@ -32,7 +32,7 @@ jobs:
         # colored output where possible;
         # don't try to compile NumPy and SciPy from source;
         # disable PEP 517 build isolation, instead use already installed packages
-        # (weirdly, must be set to "0", see https://github.com/pypa/pip/issues/5735)
+        # (weirdly, must be set to 0, see https://github.com/pypa/pip/issues/5735)
         CIBW_ENVIRONMENT: >
           FORCE_COLOR=1
           PIP_ONLY_BINARY=":all:"
