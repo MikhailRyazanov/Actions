@@ -78,8 +78,13 @@ if _cython_installed:  # if Cython is installed, we will try to build direct-C
                   'ext_modules': ext_modules}
 
 
+# use README as project description on PyPI:
+with open('README.md') as file:
+    long_description = file.read()
+
+
 setup(name='testPyAbel',  # for TestPyPI
-      version='0.0.3',
+      version='0.0.4',
       description='For testing GitHub actions',
       author='Mikhail Ryazanov',
       url='https://github.com/MikhailRyazanov/Actions',
@@ -90,6 +95,8 @@ setup(name='testPyAbel',  # for TestPyPI
                         "scipy >= 1.2",        # oldest tested
                         "six >= 1.10.0"],
       package_data={'abel': ['tests/data/*']},
+      long_description=long_description,
+      long_description_content_type='text/markdown',
       classifiers=[
           # How mature is this project? Common values are
           #  3 - Alpha
