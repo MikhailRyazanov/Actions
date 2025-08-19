@@ -1,8 +1,8 @@
 """
 Print summary of all pytest results (saved to JSON files).
 Without arguments -- ANSI-colored terminal,
-with "md" argument -- markdown,
-with "msg" argument -- gitHub notice/warning message (only for skip/warn).
+with "md" argument -- Markdown,
+with "msg" argument -- GitHub notice/warning message (only for skip/warn).
 """
 import sys
 from glob import glob
@@ -16,8 +16,8 @@ else:
     out = 'term'
 
 
-# formatter for ANSI/markdown
-def fmt(val, cond, style):  # style: "ok"/"warn"/"err"
+# formatter for ANSI/Markdown
+def fmt(val, cond, style):  # style: 'ok'/'warn'/'err'
     if not cond:
         return val
     if out == 'md':
@@ -52,7 +52,7 @@ for fname in sorted(glob('*.json')):
         res = json.load(f)
     T, E, F, W, S = map(lambda k: int(res[k]),
                         ['tests', 'error', 'failed', 'warnings', 'skipped'])
-    P = T - E - F - S
+    P = T - E - F - S  # "pass"
     if 'no-cython' in fname:
         T -= S  # ignore skipped Cython
     ok = P == T
@@ -66,7 +66,7 @@ for fname in sorted(glob('*.json')):
         row = sep.lstrip()
         row += fname[:-5]
         if out != 'md':
-            row += '\n' + ' ' * 7
+            row += '\n' + ' ' * len('Testing')
         row += sep + fmt(f'{P:4}', P == T, 'ok')
         row += sep + fmt(f'{E:5}', E, 'err')
         row += sep + fmt(f'{F:4}', F, 'err')
