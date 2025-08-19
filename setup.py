@@ -78,7 +78,7 @@ if _cython_installed:  # if Cython is installed, we will try to build direct-C
                   'ext_modules': ext_modules}
 
 
-setup(name='Actions',
+setup(name='testPyAbel',  # for TestPyPI
       version='0.0.3',
       description='For testing GitHub actions',
       author='Mikhail Ryazanov',
