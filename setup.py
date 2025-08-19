@@ -79,10 +79,10 @@ if _cython_installed:  # if Cython is installed, we will try to build direct-C
 
 
 setup(name='Actions',
-      version='0.0.2',
+      version='0.0.3',
       description='For testing GitHub actions',
       author='Mikhail Ryazanov',
-      url='https://github.com/MikhailRyazanov/Actionsl',
+      url='https://github.com/MikhailRyazanov/Actions',
       license='The Unlicense',
       packages=find_packages(),
       install_requires=["numpy >= 1.16",       # last for Python 2
