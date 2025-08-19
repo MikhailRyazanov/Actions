@@ -12,7 +12,10 @@ jobs:
       id-token: write
     steps:
     - name: Download package
-      run: gh run download -n 'package-${{ github.ref_name }}' -D dist
+      run: |
+        gh run download -R '${{ github.repository }}' \
+                        -n 'package-${{ github.ref_name }}' \
+                        -D dist
       env:
         GH_TOKEN: ${{ github.token }}
     - name: Publish to TestPyPI
