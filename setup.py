@@ -1,31 +1,28 @@
 import sys
 import os.path
-from setuptools import setup, Extension
-from distutils.errors import \
-    CCompilerError, DistutilsExecError, DistutilsPlatformError
+from setuptools import setup, find_packages, Extension
+from distutils.errors import CCompilerError, DistutilsExecError, DistutilsPlatformError
 
-# try to import NumPy and Cython to build Cython extensions:
+# try to import numpy and Cython to build Cython extensions:
 try:
     import numpy as np
     from Cython.Distutils import build_ext
     import Cython.Compiler.Options
     Cython.Compiler.Options.annotate = False
-    _build_cython = True
+    _cython_installed = True
 
 except ImportError:
-    _build_cython = False
+    _cython_installed = False
     build_ext = object  # avoid a syntax error in TryBuildExt
     setup_args = {}
-    print('=' * 75)
-    print('''\
-Warning: Cython extensions will not be built, thus the abel.direct
-         C implementation will not be available.
-         To build them, install Cython, then reinstall PyAbel
-         using pip with the --no-build-isolation option.\
-         ''')
-    print('=' * 75)
+    print('='*80)
+    print('Warning: Cython extensions will not be built as Cython is not installed!\n'\
+          '         This means that the abel.direct C implementation will not be available.')
+    print('='*80)
 
-if _build_cython:  # declarations for building direct-C Cython extension
+
+
+if _cython_installed:  # if Cython is installed, we will try to build direct-C
 
     if sys.platform == 'win32':
         extra_compile_args = ['/Ox', '/fp:fast']
@@ -48,15 +45,13 @@ if _build_cython:  # declarations for building direct-C Cython extension
             try:
                 build_ext.build_extensions(self)
             except ext_errors:
-                print('*' * 75)
-                print('''\
-WARNING: Cython extensions failed to build (used in abel.direct). This only
-         means that the abel.direct C implementation will no be available.
-         Typical reasons for this problem are:
-         - a C compiler is not installed or not found,
-         - issues using mingw compiler on Windows 64bit (experimental).\
-                      ''')
-                print('*' * 75)
+                print("**************************************************")
+                print("WARNING: Cython extensions failed to build (used in abel.direct).\n"
+                      "Typical reasons for this problem are:\n"
+                      "  - a C compiler is not installed or not found\n"
+                      "  - issues using mingw compiler on Windows 64bit (experimental support for now)\n"
+                      "This only means that the abel.direct C implementation will not be available.\n")
+                print("**************************************************")
                 if os.environ.get('CI'):
                     # running on Travis CI or Appveyor CI
                     if sys.platform == 'win32' and sys.version_info < (3, 0):
@@ -68,11 +63,7 @@ WARNING: Cython extensions failed to build (used in abel.direct). This only
                 else:
                     # regular install, Cython extensions won't be compiled
                     pass
-            except Exception as e:
-                print('*' * 75)
-                print('ERROR in building Cython extensions:')
-                print(e)
-                print('*' * 75)
+            except:
                 raise
 
     ext_modules = [
@@ -86,8 +77,41 @@ WARNING: Cython extensions failed to build (used in abel.direct). This only
                   'include_dirs': [np.get_include()],
                   'ext_modules': ext_modules}
 
-import datetime
-long_description = 'Long description generated in setup.py at ' + \
-                    str(datetime.datetime.now()) + '.'
 
-setup(long_description=long_description, **setup_args)
+setup(name='Actions',
+      version='0.0.2',
+      description='For testing GitHub actions',
+      author='Mikhail Ryazanov',
+      url='https://github.com/MikhailRyazanov/Actionsl',
+      license='The Unlicense',
+      packages=find_packages(),
+      install_requires=["numpy >= 1.16",       # last for Python 2
+                        "setuptools >= 44.0",  # last for Python 2
+                        "scipy >= 1.2",        # oldest tested
+                        "six >= 1.10.0"],
+      package_data={'abel': ['tests/data/*']},
+      classifiers=[
+          # How mature is this project? Common values are
+          #  3 - Alpha
+          #  4 - Beta
+          #  5 - Production/Stable
+          'Development Status :: 3 - Alpha',
+
+          # Pick your license as you wish (should match "license" above)
+          'License :: OSI Approved :: Unlicense',
+
+          # Specify the Python versions you support here. In particular, ensure
+          # that you indicate whether you support Python 2, Python 3 or both.
+          'Programming Language :: Python :: 2',
+          'Programming Language :: Python :: 2.7',
+          'Programming Language :: Python :: 3',
+          'Programming Language :: Python :: 3.7',
+          'Programming Language :: Python :: 3.8',
+          'Programming Language :: Python :: 3.9',
+          'Programming Language :: Python :: 3.10',
+          'Programming Language :: Python :: 3.11',
+          'Programming Language :: Python :: 3.12',
+          'Programming Language :: Python :: 3.13',
+          ],
+      **setup_args
+      )
