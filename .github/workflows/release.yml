@@ -1,7 +1,7 @@
 name: Release on TestPyPI
 
 on:
-  #
+  # trigger manually to release any branch/tag on TestPyPI
   workflow_dispatch:
     inputs:
       testpypi:
@@ -11,8 +11,15 @@ on:
         type: choice
         options:
           - yes
-  create:
-    ref_type: tag
+    env:
+      PYPI_URL: https://test.pypi.org/p/
+  # trigger automatically on version tag creation
+  # (by "Publish release" on GitHub)
+  push:
+    tags:
+    - 'v[0-9]+.*'
+    env:
+      PYPI_URL: https://pypi.org/p/
 
 jobs:
   publish:
@@ -22,8 +29,14 @@ jobs:
     #  # required for Trusted Publishing
     #  id-token: write
     steps:
-    - name: echo
-      run: echo ${{ github.event_name }}
+    - env:
+        PYPI_URL: >-
+          ${{ github.event_name == 'workflow_dispatch' &&
+              'https://test.pypi.org/p/' ||
+              'https://pypi.org/p/' }}
+      run:
+        echo ${{ github.event_name }}
+        echo ${{ env.PYPI_URL }}
 
     #- name: Download package
     #  run: |
