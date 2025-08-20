@@ -28,15 +28,14 @@ jobs:
     #permissions:
     #  # required for Trusted Publishing
     #  id-token: write
+    env:
+      PYPI_URL: >-
+        ${{ github.event_name == 'workflow_dispatch' &&
+            'https://test.pypi.org/p/' ||
+            'https://pypi.org/p/' }}
     steps:
-    - env:
-        PYPI_URL: >-
-          ${{ github.event_name == 'workflow_dispatch' &&
-              'https://test.pypi.org/p/' ||
-              'https://pypi.org/p/' }}
-      run: |
-        echo ${{ github.event_name }}
-        echo ${{ env.PYPI_URL }}
+    - name: Publish to ${{ env.PYPI_URL }}
+      run: echo 'Using PyPI URL ${{ env.PYPI_URL }}'
 
     #- name: Download package
     #  run: |
