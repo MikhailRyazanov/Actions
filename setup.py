@@ -78,13 +78,16 @@ if _cython_installed:  # if Cython is installed, we will try to build direct-C
                   'ext_modules': ext_modules}
 
 
+# set __version__ to the current package version
+exec(open('abel/_version.py', 'rt').read())
+
 # use README as project description on PyPI:
 with open('README.md') as file:
     long_description = file.read()
 
 
 setup(name='testPyAbel',  # for TestPyPI
-      version='0.0.4',
+      version=__version__,
       description='For testing GitHub actions',
       author='Mikhail Ryazanov',
       url='https://github.com/MikhailRyazanov/Actions',
