@@ -11,15 +11,11 @@ on:
         type: choice
         options:
           - yes
-    env:
-      PYPI_URL: https://test.pypi.org/p/
   # trigger automatically on version tag creation
   # (by "Publish release" on GitHub)
   push:
     tags:
     - 'v[0-9]+.*'
-    env:
-      PYPI_URL: https://pypi.org/p/
 
 jobs:
   publish:
