@@ -35,6 +35,7 @@ jobs:
         gh run download -R '${{ github.repository }}' \
                         -n 'package-${{ github.ref_name }}' \
                         -D dist
+        ls -Al dist
     - name: Publish to ${{ env.PYPI_URL }}
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
