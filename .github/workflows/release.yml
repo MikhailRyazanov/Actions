@@ -1,18 +1,15 @@
-name: Release on TestPyPI
+name: Release on (Test)PyPI
 
 on:
   # trigger manually to release any branch/tag on TestPyPI
   workflow_dispatch:
-    inputs:
-      testpypi:
+    inputs: # actions have no comment/description, so showing a useless "input"
+      _unused:
         description: 'Test release on TestPyPI'
-        required: true
-        default: 'yes'
         type: choice
         options:
           - yes
-  # trigger automatically on version tag creation
-  # (by "Publish release" on GitHub)
+  # triggered by "Publish release" on GitHub to release it on PyPI
   push:
     tags:
     - 'v[0-9]+.*'
