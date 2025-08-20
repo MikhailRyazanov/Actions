@@ -13,11 +13,11 @@ on:
     - 'v[0-9]+.*'
 
 jobs:
-  build:
-    uses: ./.github/workflows/build.yml
+  #build:
+  #  uses: ./.github/workflows/build.yml
 
   publish:
-    needs: build
+    #needs: build
     runs-on: ubuntu-22.04
     environment: pypi
     permissions:
@@ -25,8 +25,8 @@ jobs:
     env:
       PYPI_URL: >-
         ${{ github.event_name == 'workflow_dispatch' &&
-            'https://test.pypi.org/p/' ||
-            'https://pypi.org/p/' }}
+            'https://test.pypi.org/' ||
+            'https://pypi.org/' }}
     steps:
     - name: Download package
       env:
