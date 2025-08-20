@@ -1,25 +1,39 @@
 name: Release on TestPyPI
 
 on:
+  #
   workflow_dispatch:
+    inputs:
+      testpypi:
+        description: 'Test release on TestPyPI'
+        required: true
+        default: 'yes'
+        type: choice
+        options:
+          - yes
+  create:
+    ref_type: tag
 
 jobs:
-  pypi-publish:
+  publish:
     runs-on: ubuntu-22.04
     environment: pypi
-    permissions:
-      # required for Trusted Publishing
-      id-token: write
+    #permissions:
+    #  # required for Trusted Publishing
+    #  id-token: write
     steps:
-    - name: Download package
-      run: |
-        gh run download -R '${{ github.repository }}' \
-                        -n 'package-${{ github.ref_name }}' \
-                        -D dist
-      env:
-        GH_TOKEN: ${{ github.token }}
-    - name: Publish to TestPyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        repository-url: https://test.pypi.org/legacy/
-        verbose: true
+    - name: echo
+      run: echo ${{ github.event_name }}
+
+    #- name: Download package
+    #  run: |
+    #    gh run download -R '${{ github.repository }}' \
+    #                    -n 'package-${{ github.ref_name }}' \
+    #                    -D dist
+    #  env:
+    #    GH_TOKEN: ${{ github.token }}
+    #- name: Publish to TestPyPI
+    #  uses: pypa/gh-action-pypi-publish@release/v1
+    #  with:
+    #    repository-url: https://test.pypi.org/legacy/
+    #    verbose: true
