@@ -3,8 +3,6 @@
 # cython: cdivision=True
 # cython: wraparound=False
 
-error
-
 import numpy as np
 cimport numpy as np
 from libc.math cimport sqrt, log
