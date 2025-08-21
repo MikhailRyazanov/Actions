@@ -2,22 +2,27 @@ name: Publish to (Test)PyPI
 
 on:
   workflow_dispatch: # trigger manually to publish any branch/tag to TestPyPI
-    inputs: # actions have no comment/description, so showing a useless "input"
-      _unused:
+    inputs:
+      _unused: # actions have no description, so show a useless "input" instead
         description: 'Test publishing to TestPyPI'
         type: choice
         options:
-          - yes
-  push: # triggered by "Publish release" on GitHub to publish it on PyPI
+        - yes
+      skip_build:
+        description: 'Reuse last build (must exist)'
+        type: boolean
+        default: false
+  push: # triggered by "Publish release" on GitHub to publish it to PyPI
     tags:
     - 'v[0-9]+.*'
 
 jobs:
-  #build:
-  #  uses: ./.github/workflows/build.yml
+  build:
+    if: ${{ !inputs.skip_build }}
+    uses: ./.github/workflows/build.yml
 
   publish:
-    #needs: build
+    needs: build
     runs-on: ubuntu-22.04
     environment: pypi
     permissions:
