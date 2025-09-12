@@ -20,7 +20,7 @@ jobs:
       matrix:
         os: [ubuntu-22.04, macos-13, macos-latest, windows-latest]
         #py-ver: ["3.7", "3.13"]
-        py-ver: ["3.7", "3.14t-dev"]
+        py-ver: ["3.7", "3.14-dev"]
         ext: [cython, no-cython] # with/without Cython extension
         exclude:
         - os: macos-latest
