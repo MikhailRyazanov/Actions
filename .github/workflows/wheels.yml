@@ -8,7 +8,8 @@ jobs:
     strategy:
       matrix:
         #os: [ubuntu-22.04, macos-13, macos-latest, windows-latest]
-        os: [ubuntu-22.04-arm, windows-11-arm]
+        os: [ubuntu-22.04, macos-latest, windows-latest]
+        #os: [ubuntu-22.04-arm, windows-11-arm]
 
     steps:
     - uses: actions/checkout@v4
@@ -26,7 +27,8 @@ jobs:
         # "manylinux" should be enough
         CIBW_SKIP: "*musllinux*"
         # build only for Python versions with full support
-        CIBW_PROJECT_REQUIRES_PYTHON: ">=3.12"
+        #CIBW_PROJECT_REQUIRES_PYTHON: ">=3.12"
+        CIBW_PROJECT_REQUIRES_PYTHON: ">=3.13"
         # preinstall packages required to build with Cython extension
         CIBW_BEFORE_BUILD: "python -m pip install setuptools numpy cython"
         # set env variables for build and test:
@@ -48,5 +50,5 @@ jobs:
       run: python -m cibuildwheel --output-dir wheels
     - uses: actions/upload-artifact@v4
       with:
-        name: wheels-${{ github.ref_name }}-${{ matrix.os }}
+        name: wheels(${{ github.ref_name }})${{ matrix.os }}
         path: ./wheels/*
