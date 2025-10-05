@@ -7,6 +7,7 @@ jobs:
     runs-on: macos-latest
     steps:
     - name: Install Miniconda
+      # see https://www.anaconda.com/docs/getting-started/miniconda/install#macos-2
       run: |
         mkdir -p ~/miniconda3
         curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-arm64.sh \
@@ -20,11 +21,11 @@ jobs:
     - name: Install PyAbel
       run: |
         source ~/miniconda3/bin/activate
-        conda install conda-forge::pyabel
+        conda install -q conda-forge::pyabel
     - name: Install pytest
       run: |
         source ~/miniconda3/bin/activate
-        conda install conda-forge::pytest
+        conda install -q conda-forge::pytest
     - name: Run PyAbel tests
       run: |
         source ~/miniconda3/bin/activate
