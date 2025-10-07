@@ -1,0 +1,21 @@
+name: Test ABI3 wheel in Python version
+
+inputs:
+  py-ver:
+    description: "Python version"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+  - name: Set up Python ${{ inputs.py-ver }}
+    uses: actions/setup-python@v5
+    with:
+      python-version: ${{ inputs.py-ver }}
+  - name: Run Python ${{ inputs.py-ver }}
+    shell: bash
+    run: |
+      pwd
+      ls -Al
+      python --version
+      python -m pip list
