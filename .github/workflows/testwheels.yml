@@ -1,0 +1,35 @@
+name: Test wheels
+
+on: workflow_dispatch
+
+jobs:
+  wheels:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        #os: [ubuntu-22.04, macos-13, macos-latest, windows-latest]
+        os: [ubuntu-24.04]
+        #os: [ubuntu-22.04-arm, windows-11-arm]
+        py-ver: ["3.11"]
+
+    steps:
+    #- uses: actions/checkout@v4
+    #  with:
+    #    sparse-checkout: .github/workflows/summary.py
+    #    sparse-checkout-cone-mode: false
+    - name: Set up Python ${{ matrix.py-ver }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.py-ver }}
+    - name: Run Python
+      run: |
+        python --version
+        python -m pip list
+    - name: Set up Python 3.13
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.13"
+    - name: Install cibuildwheel
+      run: |
+        python --version
+        python -m pip list
