@@ -23,7 +23,7 @@ jobs:
         python-version: "3.11" # for cibuildwheel itself
     - name: Install cibuildwheel
       run: python -m pip install cibuildwheel==3.2.0
-    - name: Builda and test wheel with Python 3.11
+    - name: Build and test wheel with Python 3.11
       env:
         # don't show download progress bar
         PIP_PROGRESS_BAR: off
@@ -33,7 +33,7 @@ jobs:
         # disable free-threading builds (Cython extension uses GIL)
         CIBW_SKIP: "*musllinux* cp3??t-*"
         # build for minimal Python versions with sufficient ABI3 support
-        CIBW_PROJECT_REQUIRES_PYTHON: "~=3.11"
+        CIBW_PROJECT_REQUIRES_PYTHON: "==3.11.*"
         PYABEL_USE_ABI3: "yes"
         CIBW_ENVIRONMENT_PASS_LINUX: "PIP_PROGRESS_BAR PYABEL_USE_ABI3"
         # testing requires abi3audit for built wheel and pytest for package
@@ -41,7 +41,7 @@ jobs:
         # calling pytest directly uses wrong python;
         # results can be copied to output (with meaningful name) only manually
         CIBW_TEST_COMMAND: >
-          python -m abi3audit {wheel} &&
+          python -m abi3audit --summary {wheel} &&
           python -m pytest --pyargs abel --log-level=WARN &&
           python {package}/.github/workflows/save-test.py {package} {wheel}
       run: python -m cibuildwheel --output-dir wheels
