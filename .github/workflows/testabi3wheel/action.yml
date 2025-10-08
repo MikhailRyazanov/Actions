@@ -14,13 +14,17 @@ runs:
       python-version: ${{ inputs.py-ver }}
   - name: Run Python ${{ inputs.py-ver }}
     shell: bash
+    # Works in "wheels" subdir to avoid using repository files.
+    # Install the (single) .whl file present there, run a quick import test
+    # (will fail immediately if the Cython extension cannot be loaded), then
+    # all regular PyAbel tests and save the results.
     run: |
       cd wheels
       ls -Al
       WHEEL=$(ls *.whl)
-      python -m pip list
       python -m pip install $WHEEL
       python -m pip list
+      python -c "import abel.lib.direct"
       python -m pip install pytest
       python -m pytest --pyargs abel --log-level=WARN
       python ../.github/workflows/save-test.py $WHEEL@${{ inputs.py-ver }}
