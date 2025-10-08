@@ -43,7 +43,7 @@ jobs:
         CIBW_TEST_COMMAND: >
           python -m abi3audit --summary {wheel} &&
           python -m pytest --pyargs abel --log-level=WARN &&
-          python {package}/.github/workflows/save-test.py {package} {wheel}
+          python {package}/.github/workflows/save-test.py {package} {wheel}@3.11
       run: python -m cibuildwheel --output-dir wheels
     - name: Results
       run: ls -RAl

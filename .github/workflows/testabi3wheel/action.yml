@@ -15,7 +15,12 @@ runs:
   - name: Run Python ${{ inputs.py-ver }}
     shell: bash
     run: |
-      pwd
+      cd wheels
       ls -Al
-      python --version
+      WHEEL=$(ls *.whl)
       python -m pip list
+      python -m pip install $WHEEL
+      python -m pip list
+      python -m pip install pytest
+      python -m pytest --pyargs abel --log-level=WARN
+      python ../.github/workflows/save-test.py $WHEEL@${{ inputs.py-ver }}
