@@ -1,127 +1,74 @@
+from pathlib import Path
+import re
 import sys
-import os.path
-from setuptools import setup, find_packages, Extension
-from distutils.errors import CCompilerError, DistutilsExecError, DistutilsPlatformError
+import os
+from setuptools import setup, Extension
 
-# try to import numpy and Cython to build Cython extensions:
+
+# Set __version__ to the current package version
+exec(Path('abel/_version.py').read_text('utf-8'))
+
+'''
+# Use README as the project description on PyPI
+long_description = Path('README.rst').read_text('utf-8')
+
+# but remove CI badges
+long_description = re.sub(
+    r'^.+?https://(github\.com/.+/pytest.yml|ci\.appveyor\.com/).*?\n', '',
+    long_description,
+    flags=re.MULTILINE, count=4)  # limit to top 2 pairs of image + target
+
+# and change all GH and RTD links to this specific PyAbel version
+long_description = long_description.\
+    replace('https://github.com/PyAbel/PyAbel/tree/master/',
+            f'https://github.com/PyAbel/PyAbel/tree/v{__version__}/').\
+    replace('https://pyabel.readthedocs.io/en/latest/',
+            f'https://pyabel.readthedocs.io/en/v{__version__}/')
+'''
+
+# Try to build Cython extensions
+setup_args = {}
 try:
-    import numpy as np
-    from Cython.Distutils import build_ext
-    import Cython.Compiler.Options
-    Cython.Compiler.Options.annotate = False
-    _cython_installed = True
+    import numpy
+    from Cython.Compiler import Options
+    Options.annotate = False  # don't create HTML
 
+    extension_args = {'include_dirs': [numpy.get_include()]}
+
+    if sys.platform == 'win32':  # for MSVC
+        extension_args['extra_compile_args'] = ['/Ox', '/fp:fast']
+    else:  # for GCC-compatible
+        extension_args['extra_compile_args'] = ['-Ofast', '-g0']
+        extension_args['libraries'] = ['m']
+
+    # if environment variable PYABEL_USE_ABI3=yes, build using Stable ABI for
+    # Python >= 3.11 (first Limited API including Py_buffer needed for NumPy)
+    if os.environ.get('PYABEL_USE_ABI3') == 'yes':
+        extension_args['define_macros'] = [
+            ('Py_LIMITED_API', 0x030B0000)  # 0x0B = 11
+        ]
+        extension_args['py_limited_api'] = True
+        setup_args['options'] = {'bdist_wheel': {'py_limited_api': 'cp311'}}
+        print('Building Cython extensions with Stable ABI for Python >= 3.11.')
+
+    setup_args['ext_modules'] = [
+        Extension('abel.lib.direct', ['abel/lib/direct.pyx'], **extension_args)
+    ]
 except ImportError:
-    _cython_installed = False
-    build_ext = object  # avoid a syntax error in TryBuildExt
-    setup_args = {}
-    print('='*80)
-    print('Warning: Cython extensions will not be built as Cython is not installed!\n'\
-          '         This means that the abel.direct C implementation will not be available.')
-    print('='*80)
+    print(f'''\
+{'=' * 75}
+Warning: Cython extensions will not be built, thus the abel.direct
+         C implementation will not be available.
+         To build them, install Cython (and NumPy), then reinstall PyAbel
+         using pip with the --no-build-isolation option.
+{'=' * 75}''')
 
 
-
-if _cython_installed:  # if Cython is installed, we will try to build direct-C
-
-    if sys.platform == 'win32':
-        extra_compile_args = ['/Ox', '/fp:fast']
-        libraries = []
-    else:
-        extra_compile_args = ['-Ofast', '-g0']
-        libraries = ["m"]
-
-    # Optional compilation of Cython modules adapted from
-    # https://github.com/bsmurphy/PyKrige which was itself
-    # adapted from a StackOverflow post
-
-    ext_errors = (CCompilerError, DistutilsExecError, DistutilsPlatformError)
-
-    class TryBuildExt(build_ext):
-        """Class to  build the direct-C extensions."""
-
-        def build_extensions(self):
-            """Try to build the direct-C extension."""
-            try:
-                build_ext.build_extensions(self)
-            except ext_errors:
-                print("**************************************************")
-                print("WARNING: Cython extensions failed to build (used in abel.direct).\n"
-                      "Typical reasons for this problem are:\n"
-                      "  - a C compiler is not installed or not found\n"
-                      "  - issues using mingw compiler on Windows 64bit (experimental support for now)\n"
-                      "This only means that the abel.direct C implementation will not be available.\n")
-                print("**************************************************")
-                if os.environ.get('CI'):
-                    # running on Travis CI or Appveyor CI
-                    if sys.platform == 'win32' and sys.version_info < (3, 0):
-                        # Cython extensions are not built on Appveyor (Win)
-                        # for PY2.7. See PR #185
-                        pass
-                    else:
-                        raise
-                else:
-                    # regular install, Cython extensions won't be compiled
-                    pass
-            except:
-                raise
-
-    ext_modules = [
-        Extension("abel.lib.direct",
-                  [os.path.join("abel", "lib", "direct.pyx")],
-                  include_dirs=[np.get_include()],
-                  libraries=libraries,
-                  extra_compile_args=extra_compile_args)]
-
-    setup_args = {'cmdclass': {'build_ext': TryBuildExt},
-                  'include_dirs': [np.get_include()],
-                  'ext_modules': ext_modules}
-
-
-# set __version__ to the current package version
-exec(open('abel/_version.py', 'rt').read())
-
-# use README as project description on PyPI:
-with open('README.md') as file:
-    long_description = file.read()
-
-
-setup(name='testPyAbel',  # for TestPyPI
-      version=__version__,
-      description='For testing GitHub actions',
-      author='Mikhail Ryazanov',
-      url='https://github.com/MikhailRyazanov/Actions',
-      license='The Unlicense',
-      packages=find_packages(),
-      install_requires=["numpy >= 1.16",       # last for Python 2
-                        "setuptools >= 44.0",  # last for Python 2
-                        "scipy >= 1.2",        # oldest tested
-                        "six >= 1.10.0"],
-      package_data={'abel': ['tests/data/*']},
-      long_description=long_description,
-      long_description_content_type='text/markdown',
-      classifiers=[
-          # How mature is this project? Common values are
-          #  3 - Alpha
-          #  4 - Beta
-          #  5 - Production/Stable
-          'Development Status :: 3 - Alpha',
-
-          # Pick your license as you wish (should match "license" above)
-          'License :: OSI Approved :: The Unlicense (Unlicense)',
-
-          # Specify the Python versions you support here. In particular, ensure
-          # that you indicate whether you support Python 2, Python 3 or both.
-          'Programming Language :: Python :: 2',
-          'Programming Language :: Python :: 2.7',
-          'Programming Language :: Python :: 3',
-          'Programming Language :: Python :: 3.7',
-          'Programming Language :: Python :: 3.8',
-          'Programming Language :: Python :: 3.9',
-          'Programming Language :: Python :: 3.10',
-          'Programming Language :: Python :: 3.11',
-          'Programming Language :: Python :: 3.12',
-          'Programming Language :: Python :: 3.13',
-          ],
-      **setup_args
-      )
+# Supply dynamic options to setuptools (static are taken from pyproject.toml;
+# the license option in pyproject.toml is incompatible (!) between Setuptools
+# <77 and >=77, thus it must be provided here; the license file is found
+# automatically in both cases)
+setup(version=__version__,
+      #long_description=long_description,
+      license='MIT',
+      **setup_args)
