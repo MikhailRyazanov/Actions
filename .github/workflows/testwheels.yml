@@ -47,11 +47,13 @@ jobs:
       run: python -m cibuildwheel --output-dir wheels
     - name: Results
       run: ls -RAl
-    #- name: Test wheel with Python 3.12
-    #  uses: ./.github/workflows/testabi3wheel
-    #  with:
-    #    py-ver: "3.12"
-    #- name: Test wheel with Python 3.13
-    #  uses: ./.github/workflows/testabi3wheel
-    #  with:
-    #    py-ver: "3.13"
+    - name: Test wheel with Python 3.12
+      uses: ./.github/workflows/testabi3wheel
+      with:
+        py-ver: "3.12"
+    - name: Test wheel with Python 3.13
+      uses: ./.github/workflows/testabi3wheel
+      with:
+        py-ver: "3.13"
+    - name: Results
+      run: ls -RAl
