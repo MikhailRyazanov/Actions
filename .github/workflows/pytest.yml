@@ -80,3 +80,10 @@ jobs:
         pytest -v --cov=abel --pyargs abel --log-level=WARN
         python Actions/.github/workflows/save-test.py ${{ matrix.ext }}
         python Actions/.github/workflows/summary.py msg
+    - name: Threads
+      run: python -c "import abel.lib.count"
+    - name: Uninstall macOS OpenMP
+      run: brew uninstall libomp
+    - name: Threads
+      run: python -c "import abel.lib.count"
+      continue-on-error: true

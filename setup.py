@@ -52,7 +52,8 @@ try:
         print('Building Cython extensions with Stable ABI for Python >= 3.11.')
 
     setup_args['ext_modules'] = [
-        Extension('abel.lib.direct', ['abel/lib/direct.pyx'], **extension_args)
+        Extension('abel.lib.direct', ['abel/lib/direct.pyx'], **extension_args),
+        Extension('abel.lib.count', ['abel/lib/count.pyx'], **extension_args)
     ]
 except ImportError:
     print(f'''\
