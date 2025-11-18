@@ -40,8 +40,6 @@ jobs:
           python -m pytest --pyargs abel --log-level=WARN &&
           python {package}/.github/workflows/save-test.py {package} {wheel}@3.11
       run: python -m cibuildwheel --output-dir wheels
-    - name: Files
-      run: ls -RAl
     - name: Test wheel with Python 3.12
       uses: ./.github/workflows/testabi3wheel
       with:
@@ -54,8 +52,6 @@ jobs:
       uses: ./.github/workflows/testabi3wheel
       with:
         py-ver: "3.14"
-    - name: Files
-      run: ls -RAl
     - name: Store results
       uses: actions/upload-artifact@v4
       with:
