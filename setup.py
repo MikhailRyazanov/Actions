@@ -37,8 +37,8 @@ try:
 
     if sys.platform == 'win32':  # for MSVC
         extension_args['extra_compile_args'] = ['/Ox', '/fp:fast']
-    else:  # for GCC-compatible
-        extension_args['extra_compile_args'] = ['-Ofast', '-g0']
+    else:  #  GCC, Clang
+        extension_args['extra_compile_args'] = ['-O3', '-ffast-math', '-g0']
         extension_args['libraries'] = ['m']
 
     # if environment variable PYABEL_USE_ABI3=yes, build using Stable ABI for
