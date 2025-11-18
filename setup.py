@@ -8,7 +8,7 @@ from setuptools import setup, Extension
 # Set __version__ to the current package version
 exec(Path('abel/_version.py').read_text('utf-8'))
 
-'''
+r'''
 # Use README as the project description on PyPI
 long_description = Path('README.rst').read_text('utf-8')
 
