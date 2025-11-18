@@ -43,7 +43,9 @@ jobs:
     - uses: actions/checkout@v4
     - name: Install macOS OpenMP
       if: ${{ startsWith(matrix.os, 'macos') }}
-      run: brew install libomp
+      run: |
+        brew install libomp
+        brew --prefix libomp
     - name: Set up Python ${{ matrix.py-ver }}
       uses: actions/setup-python@v5
       with:
@@ -64,7 +66,8 @@ jobs:
         # (confusingly, must be set to 0 to disable isolation;
         # using "!=" because the first value after "&&" must be truthy)
         PIP_NO_BUILD_ISOLATION: ${{ matrix.ext != 'cython' && 1 || 0 }}
-        CFLAGS: -Xpreprocessor -fopenmp -lomp
+        CFLAGS: -I/opt/homebrew/opt/libomp/include -Xpreprocessor -fopenmp -lomp
+        LDFLAGS: -L/opt/homebrew/opt/libomp/lib
       run: python -m pip install . -v
     - name: Information
       run: python .github/workflows/info.py
