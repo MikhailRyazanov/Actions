@@ -8,7 +8,7 @@ from setuptools import setup, Extension
 # Set __version__ to the current package version
 exec(Path('abel/_version.py').read_text('utf-8'))
 
-'''
+r'''
 # Use README as the project description on PyPI
 long_description = Path('README.rst').read_text('utf-8')
 
@@ -37,8 +37,8 @@ try:
 
     if sys.platform == 'win32':  # for MSVC
         extension_args['extra_compile_args'] = ['/Ox', '/fp:fast']
-    else:  # for GCC-compatible
-        extension_args['extra_compile_args'] = ['-Ofast', '-g0']
+    else:  #  GCC, Clang
+        extension_args['extra_compile_args'] = ['-O3', '-ffast-math', '-g0']
         extension_args['libraries'] = ['m']
 
     # if environment variable PYABEL_USE_ABI3=yes, build using Stable ABI for
@@ -52,7 +52,8 @@ try:
         print('Building Cython extensions with Stable ABI for Python >= 3.11.')
 
     setup_args['ext_modules'] = [
-        Extension('abel.lib.direct', ['abel/lib/direct.pyx'], **extension_args)
+        Extension('abel.lib.direct', ['abel/lib/direct.pyx'], **extension_args),
+        Extension('abel.lib.count', ['abel/lib/count.pyx'], **extension_args)
     ]
 except ImportError:
     print(f'''\
